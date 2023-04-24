@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Cairo;
+}
+
+input, button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.App {
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: #bbdae2;
+}
+
+.form-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFF;
+  padding: 30px;
+  height: 400px;
+  width: 400px;
+  box-shadow: 40px 10px 20px rgba(5, 5, 235, 0.5);
+  justify-content: center;
+  align-items: center;
+  
+}
+
+#login-cnr-logo {
+  color: rgba(216, 230, 238, 1);
+  font-size: 28px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.form-groop {
+  position: relative;
+  /*display: block;*/
+  width: 300px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  padding-left: 20px; 
+}
+
+.form-groop input {
+  display: block;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #f8f8f8;
+  transition: 0.4s;
+  padding-left: 40px;
+}
+
+.form-groop img {
+  margin-right: 10px;
+}
+.form-inner .form-groop label {
+  display: block;
+  color: #666;
+  font-size:15px;
+  margin-bottom: 20px;
+  transition: 0.4s;
+}
+
+.form-inner .form-groop:focus-within label {
+  color: #FE4880;
+}
+
+.form-inner .form-groop input {
+  display: block;
+  width: 300px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #F8F8F8;
+  transition: 0.4s;
+  border-bottom: 2px solid blue;
+
+}
+
+.form-inner button[type="submit"] {
+  display: inline-block;
+  padding: 10px 15px;
+  background-image: linear-gradient( to right, #3641d7 50%, #2d4add 50%, #0a1c81);
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: 200px;
+  margin-top: 30px;
+}
+
+.form-inner button[type="submit"]:hover {
+  background-position: 100% 0%;
+}
+
+
+.form-groop input[type="text"], .form-groop input[type="password"] {
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #f8f8f8;
+  margin-bottom: 10px;
+  width: 300px;
+  box-sizing: border-box;
+  position: relative;
+  border-bottom: 2px solid blue;
+  background-color: #D8E6EE;
+  
+}
+
+.form-groop input[type="text"]:focus, .form-groop input[type="password"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0px 0px 3px rgba(0, 123, 255, 0.5);
+}
+
+input[type="text"], input[type="password"] {
+  background-color: blue;
+  color: rgb(12, 12, 12);
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 300px;
+}
+
+
+
+
