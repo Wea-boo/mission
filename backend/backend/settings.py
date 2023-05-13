@@ -66,10 +66,8 @@ ROOT_URLCONF = 'backend.urls'
 
 # Use this if your frontend and backend are running on different domains
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',  # Change this to match your frontend domain
-)
-
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 KNOX_AUTH_COOKIE_NAME = "auth_token"
 

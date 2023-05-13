@@ -1,9 +1,12 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import API_URL from './urlConfig';
+
+axios.defaults.baseURL = API_URL;
 
 class AuthServices {
     login(data){
-        return axios.post("http://localhost:8000/api/login/", data, { withCredentials: true });
+        return axios.post("/api/login/", data, { withCredentials: true });
     }
     logout(){
         const token = Cookies.get('auth_token');
@@ -14,7 +17,7 @@ class AuthServices {
           console.log(token)
         }
 
-        return axios.post("http://localhost:8000/api/logout/", {},{
+        return axios.post("/api/logout/", {},{
           headers: headers,
           withCredentials: true });
         }
@@ -26,7 +29,7 @@ class AuthServices {
           headers.Authorization = `Token ${token}`;
         }
       
-        return axios.get("http://localhost:8000/api/check_auth/", {
+        return axios.get("/api/check_auth/", {
           headers: headers,
           withCredentials: true
         });

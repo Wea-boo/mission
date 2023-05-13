@@ -1,5 +1,9 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import API_URL from './urlConfig';
+
+axios.defaults.baseURL = API_URL;
+
 
 class DemandServices {
     getDemand(id){
@@ -9,7 +13,8 @@ class DemandServices {
         if (token) {
           headers.Authorization = `Token ${token}`;
         }
-       return axios.get(`http://localhost:8000/api/demand/${id}/`, {
+        
+       return axios.get(`/api/demand/${id}/`, {
         headers: headers,
         withCredentials: true
       });
@@ -21,7 +26,7 @@ class DemandServices {
         if (token) {
           headers.Authorization = `Token ${token}`;
         }
-        return axios.get(`http://localhost:8000/api/demand/${id}/transitions/`, {
+        return axios.get(`/api/demand/${id}/transitions/`, {
             headers: headers,
             withCredentials: true
           })
@@ -34,7 +39,7 @@ class DemandServices {
           headers.Authorization = `Token ${token}`;
           console.log(headers)
         }
-        return axios.post(`http://localhost:8000/api/demand/${id}/${action}/`, {},{
+        return axios.post(`/api/demand/${id}/${action}/`, {},{
             headers: headers,
             withCredentials: true
         })
