@@ -2,16 +2,26 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../Contexts/AuthContexts";
 import Sidebar from "./Sidebar";
+import Navbar from "./NavBar";
+import LoadingSpinner from './LoadingSpinner';
 
 function SecuredRoutes() {
   const { isLoggedIn, loading } = useAuth();
 
   if (loading) {
-    return <p>LOADING...</p>; // or return a loading indicator
+    return <LoadingSpinner />; // or return a loading indicator
   }
 
   return (
-    isLoggedIn ? <Sidebar><Outlet/></Sidebar> : <Navigate to="/login"/>
+    isLoggedIn ? 
+    <>
+      <Navbar />
+      <Sidebar>
+        <Outlet />
+      </Sidebar>
+    </> 
+    : 
+    <Navigate to="/login"/>
   );
 }
 

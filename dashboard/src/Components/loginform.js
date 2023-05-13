@@ -40,6 +40,7 @@ const LoginForm = () => {
     }
 
     return (
+        <div className="form">
         <form className="form-inner" onSubmit={handleSubmit}>
             <img src={logo} width={60} height={50} id="login-cnr-logo"/>
             <div className="form-groop">
@@ -64,6 +65,8 @@ const LoginForm = () => {
             </div>
             <button type="submit">Connexion</button>
         </form>
+        </div>
+
     )
 }
 

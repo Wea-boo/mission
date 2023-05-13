@@ -38,13 +38,18 @@ export function AuthProvider({ children }) {
     const checkLoggedInStatus = async () => {
       try {
         const response = await AuthServices.checkAuth();
-        console.log(response.data.is_authenticated);
-        setIsLoggedIn(response.data.is_authenticated);
-        console.log(isLoggedIn)
+        if (response.status === 200) {
+            setIsLoggedIn(true);
+            console.log(response)
+        }
       } catch (error) {
-        console.log(error);
+        if (error.response && error.response.status === 403) {
+            setIsLoggedIn(false);
+        } else {
+            console.log(error);
+        }
       } finally {
-        setLoading(false);
+            setLoading(false);
       }
     };
   

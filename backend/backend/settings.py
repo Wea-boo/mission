@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'mission.apps.MissionConfig',
 ]
 
-AUTH_USER_MODEL = 'mission.CustomUser'
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -57,6 +58,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 ROOT_URLCONF = 'backend.urls'
 
 # Use this if your frontend and backend are running on different domains
@@ -64,6 +69,9 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',  # Change this to match your frontend domain
 )
+
+
+KNOX_AUTH_COOKIE_NAME = "auth_token"
 
 # Use this if your frontend and backend are running on the same domain
 SESSION_COOKIE_DOMAIN = 'localhost'
@@ -95,6 +103,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 AUTH_USER_MODEL = 'mission.CustomUser'
+
+AUTH_GROUP_MODEL = 'mission.Group'
+
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -160,5 +171,5 @@ REST_KNOX = {
     "COOKIE_SECURE": True,
     "COOKIE_DOMAIN": None,
     "COOKIE_NAME": "auth_token",
-    "COOKIE_HTTP_ONLY": True,
+    "COOKIE_HTTP_ONLY": False,
 }

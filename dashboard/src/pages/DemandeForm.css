@@ -1,0 +1,145 @@
+.demande-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+
+.demande-form label {
+  margin: 5px;
+}
+
+.demande-form textarea {
+  height: 100px;
+}
+
+.demande-form input[type="datetime-local"] {
+  width: 250px;
+}
+
+.form-container {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  background-color: white;
+}
+
+.form-container.active .demande-form {
+  display: flex;
+}
+
+.form-container.active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input {
+  padding: 5px;
+  margin: 5px;
+  width: 845px;
+  height: 50px;
+}
+
+input[type="datetime-local"] {
+width: 500px;
+}
+
+
+.demande-form textarea.input-motif {
+width: 100%;
+padding: 10px;
+font-size: 16px;
+border: none;
+border-bottom: 2px solid #ccc;
+margin-bottom: 20px;
+resize: none;
+font-family: inherit;
+height: 40px !important;
+}
+
+
+
+.button-container {
+  margin-top: 50px;
+}
+
+.button {
+padding: 5px 10px;
+margin: 5px;
+margin-left: 100px;
+border: none;
+border-radius: 5px;
+background-color: #4CAF50;
+color: white;
+cursor: pointer;
+font-size: 16px;
+float: right; 
+}
+
+.button-s {
+  padding: 5px 50px;
+  margin: 5px;
+  margin-left: 250px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  transition: background 0.5s, transform 0.5s;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+  float: right; 
+}
+
+.button-a {
+padding: 5px 50px;
+margin: 5px;
+margin-left: 150px;
+border: none;
+border-radius: 5px;
+background-color: #d20808;
+transition: background 0.5s, transform 0.5s;
+color: white;
+cursor: pointer;
+font-size: 16px;
+float: right; 
+}
+
+.button-e {
+padding: 5px 50px;
+margin: 5px;
+border: none;
+border-radius: 5px;
+background-color: #af7c4c;
+transition: background 0.5s, transform 0.5s;
+color: white;
+cursor: pointer;
+font-size: 16px;
+float: right; 
+}
+
+
+.button-e:hover {
+  background-color: #d47822;
+  transform: translateY(-10px);
+}
+
+.button-a:hover {
+  background-color: #FF004F;
+  transform: translateY(-10px);
+}
+
+.button-s:hover {
+  background-color: #21ed3c;
+  transform: translateY(-10px);
+}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
