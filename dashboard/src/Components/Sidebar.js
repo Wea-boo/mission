@@ -21,11 +21,6 @@ const Sidebar = ({children}) => {
             icon:<FaTh/>
         },
         {
-            path:"/Demandes",
-            name:"demandes",
-            icon:<AiFillFolderOpen/>
-        },
-        {
             path:"/Stats",
             name:"stats",
             icon:<FaRegChartBar/>
@@ -39,7 +34,7 @@ const Sidebar = ({children}) => {
     return (
         <div className="container">
               
-           <div style={{width:  "200px" }} className="sidebar">
+           <div className="sidebar">
                <div className="top_section">
                     {/*<Navbar/>*/}
                    <h1 style={{display:  "block" }} className="logo"><img src={logo} width={60} height={50}/></h1>

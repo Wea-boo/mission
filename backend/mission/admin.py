@@ -22,3 +22,5 @@ admin.site.register(Group)
 admin.site.register(Profile)
 admin.site.register(Direction)
 admin.site.register(Employee)
+
+

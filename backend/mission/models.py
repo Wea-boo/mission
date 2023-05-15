@@ -43,7 +43,7 @@ class Employee(models.Model):
     grade = models.CharField(max_length=50, null=False, blank=False)
     function = models.CharField(max_length=50, null=True, blank=True)
     direction = models.ForeignKey(Direction, null=False, on_delete=models.CASCADE)
-    manager = models.ForeignKey('Employee', null=True, on_delete=models.SET_NULL)
+    manager = models.ForeignKey('Employee', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -88,8 +88,8 @@ class MissionOrder(models.Model):
     use_personal_vehicle = models.BooleanField(null=False)
     departing = models.DateTimeField()
     returning = models.DateTimeField()
-    observation_manager = models.CharField(max_length=255)
-    observation_HR = models.CharField(max_length=255)
+    observation_manager = models.TextField()
+    observation_HR = models.TextField()
     demand = models.OneToOneField(Demand, null=False, on_delete=models.CASCADE)
     agency = models.ForeignKey(Agency, null=False, on_delete=models.CASCADE)
 

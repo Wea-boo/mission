@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoadingSpinner from "../Components/LoadingSpinner";
 import DemandServices from "../Services/DemandServices";
+import ValidationModal, {validationInfoRequirements} from "../Components/ValidationModal";
 
 
 const UserInfo = ({ title, user }) => {
@@ -36,6 +37,35 @@ const Visualization = () => {
   const [demand, setDemand] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [Actions, setActions] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentAction, setCurrentAction] = useState(null); // Add state for the current action
+
+  // (Keep useEffect as is)
+
+  const openModal = (action) => {
+    // Check if the action requires validation
+    if (validationInfoRequirements[action?.action]) {
+      setCurrentAction(action);
+      setModalOpen(true);
+    } else {
+      // If no validation is required, trigger the transition directly
+      handleButtonClick(action.action);
+    }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleSubmit = async (validationInfo) => {
+    try {
+      await DemandServices.triggerTransition(demand_id, currentAction?.action, validationInfo);
+      closeModal();
+    } catch (error) {
+      console.error(`Error triggering transition '${currentAction?.action}':`, error);
+      alert(`Failed to trigger transition: ${error.message}`);
+    }
+  };
 
   useEffect(() => {
     const fetchDemandDetails = async () => {
@@ -84,11 +114,17 @@ const Visualization = () => {
             <button 
               key={action.id} 
               className="action-button"
-              onClick={() => handleButtonClick(action?.action)}>
+              onClick={() => openModal(action)}>
               {action.action}
             </button>
           ))}
         </div>
+        <ValidationModal 
+          isOpen={modalOpen} 
+          onRequestClose={closeModal} 
+          onSubmit={handleSubmit} 
+          action={currentAction} 
+        />
         <div className="details-container">
           <section className="demande-info info-section">
             <h2>Informations Demande:</h2>

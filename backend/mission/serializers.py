@@ -44,7 +44,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'employee')
+        fields = ('id','username', 'email', 'employee')
 
 class WorkFlowSerializer(serializers.ModelSerializer):
     class Meta:

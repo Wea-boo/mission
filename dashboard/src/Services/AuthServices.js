@@ -34,6 +34,32 @@ class AuthServices {
           withCredentials: true
         });
       }
+      checkUserRoles() {
+        const token = Cookies.get('auth_token');
+        const headers = {};
+      
+        if (token) {
+          headers.Authorization = `Token ${token}`;
+        }
+    
+        return axios.get("/api/user-profile/", {
+          headers: headers,
+          withCredentials: true
+        });
+      }    
+      fetchUsersInSameDirection() {
+        const token = Cookies.get('auth_token');
+        const headers = {};
+      
+        if (token) {
+          headers.Authorization = `Token ${token}`;
+        }
+    
+        return axios.get("/api/users-in-direction/", {
+          headers: headers,
+          withCredentials: true
+        });
+      }
 }
 
 export default new AuthServices();

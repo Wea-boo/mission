@@ -12,5 +12,10 @@ urlpatterns = [
     path("create-demand/", CreateOwnDemandView.as_view(), name="create_demand"),
     path('demand/<int:pk>/', DemandDetailsView.as_view(), name='demand_details'),
     path('demand/<int:pk>/transitions/', DemandTransitionsAPIView.as_view(), name='demand-transitions'),
-    path('demand/<int:pk>/envoyer/', CreatedToWaitingApproval.as_view(), name="submit-demand")
+    path('demand/<int:pk>/envoyer/', CreatedToWaitingApproval.as_view(), name="submit-demand"),
+    path('demand/<int:pk>/approuver/', WaitingApprovalToApproved().as_view(), name="approve-demand"),
+    path('demand/<int:pk>/annuler/', CreatedToCancelled.as_view(), name='cancel-demand'),
+    path('users-in-direction/', UsersInSameDirection.as_view(), name='users-in-same-direction'),
+    path('user-profile/', UserProfile.as_view(), name='user-profile'),
+    path('create-others-demand/', CreateOthersDemandView.as_view(), name="create_demand_pc"),
 ]

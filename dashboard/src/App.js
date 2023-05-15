@@ -15,6 +15,7 @@ import Visualization from "./pages/Visualization";
 
 
 const App = () => {
+  const [selectedFilter, setSelectedFilter] = useState(null);
 
   return (
     <AuthProvider>
@@ -22,20 +23,18 @@ const App = () => {
         <div className="App">
           <Routes>
             <Route element={<SecuredRoutes />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/Dashboard" element={<Dashboard />} />
-              <Route path="/Demandes" element={<Demandes />} />
-              <Route path="/Stats" element={<Stats />} />
-              <Route path="/DemandeForm" element={<DemandeForm />} />
+              <Route path="/" element={<Dashboard setSelectedFilter={setSelectedFilter} />} />
+              <Route path="/dashboard" element={<Dashboard setSelectedFilter={setSelectedFilter} />} />
+              <Route path="/demandes" element={<Demandes filter={selectedFilter} />} />
+              <Route path="/stats" element={<Stats />} />
+              <Route path="/demandeForm" element={<DemandeForm />} />
               <Route path="/demand/:demand_id" element={<Visualization />} />
             </Route>
-            <Route path="/Login" element={<LoginRedirect />} />
+            <Route path="/login" element={<LoginRedirect />} />
           </Routes>
         </div>
       </Router>
     </AuthProvider>
   );
 };
-
-
 export default App;
