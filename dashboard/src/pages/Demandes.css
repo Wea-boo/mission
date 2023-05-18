@@ -1,16 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;600;800&family=Roboto:wght@400;700&display=swap');
+
 *{
     font-family: Roboto;
+    box-sizing: border-box;
 }
 
 .table-container {
-  padding-top: 150px;
-  padding-left: 30px;
-  padding-right: 0px; 
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-self: center;
 }
+
 .custom-table {
   border-collapse: collapse;
-  width: 100%;
+  width: 80%;
+  margin: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .custom-table thead th:first-child {
@@ -23,14 +30,17 @@
 
 .custom-table th {
   background-color: #40C8F4;
+  color: white;
+  padding: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
-
 
 .table-header,
 .table-cell {
-  padding: 12px 8px;
+  padding: 20px 15px;
   text-align: left;
-  border-bottom: 1px solid #918f8f;
+  border-bottom: 1px solid #dddddd;
 }
 
 .table-header {
@@ -40,7 +50,7 @@
 }
 
 .btn {
-  padding: 5px 2px;
+  padding: 10px 20px;
   margin-left: 5px;
   border: none;
   border-radius: 5px;
@@ -55,4 +65,3 @@
   background-color: #21ed3c;
   transform: translateY(-2px);
 }
-

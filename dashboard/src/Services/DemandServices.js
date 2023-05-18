@@ -45,6 +45,7 @@ class DemandServices {
           })
     }
     triggerTransition(id, action, validationInfo){
+      action = action.replace(' ', '-');
       const token = Cookies.get('auth_token');
       const headers = {};
   
@@ -52,6 +53,7 @@ class DemandServices {
         headers.Authorization = `Token ${token}`;
         console.log(headers)
       }
+      
       return axios.post(`/api/demand/${id}/${action}/`, validationInfo,{
           headers: headers,
           withCredentials: true

@@ -15,7 +15,13 @@ urlpatterns = [
     path('demand/<int:pk>/envoyer/', CreatedToWaitingApproval.as_view(), name="submit-demand"),
     path('demand/<int:pk>/approuver/', WaitingApprovalToApproved().as_view(), name="approve-demand"),
     path('demand/<int:pk>/annuler/', CreatedToCancelled.as_view(), name='cancel-demand'),
+    path('demand/<int:pk>/refuser/', WaitingApprovalToDenied.as_view(), name='deny-demand'),
+    path('demand/<int:pk>/etablir-ordre/', ApprovedToWaitingValidation.as_view(), name='establish-order'),
+    path('demand/<int:pk>/valider/', WaitingValidationToValidated.as_view(), name='validate-order'),
+    path('demand/<int:pk>/rejeter/', WaitingApprovalToDenied.as_view(), name='deny-order'),
     path('users-in-direction/', UsersInSameDirection.as_view(), name='users-in-same-direction'),
     path('user-profile/', UserProfile.as_view(), name='user-profile'),
     path('create-others-demand/', CreateOthersDemandView.as_view(), name="create_demand_pc"),
+    path('demands/', DemandList.as_view(), name='demand-list'),
+    path('dashboard-filters/', dashboard_filters, name='dashboard_filters'),
 ]

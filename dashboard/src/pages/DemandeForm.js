@@ -25,12 +25,10 @@ const DemandeForm = () => {
         setAgencies(agenciesResponse.data);
 
         const userRolesResponse = await AuthServices.checkUserRoles();
-        console.log(userRolesResponse.data)
         setUserRoles(userRolesResponse.data);
 
         if (userRolesResponse.data.is_secretary) {
           const usersInSameDirectionResponse = await AuthServices.fetchUsersInSameDirection();
-          console.log(usersInSameDirectionResponse.data)
           setUsersInSameDirection(usersInSameDirectionResponse.data);
         }
       } catch (error) {
@@ -87,7 +85,6 @@ const DemandeForm = () => {
       alert("Erreur lors de la création de la demande. Veuillez réessayer.");
     }
   };
-
   return (
     <>
       <div className={"form-container active"}>
@@ -98,7 +95,7 @@ const DemandeForm = () => {
               <input type="checkbox" checked={creatingForSelf} onChange={handleToggleChange} />
             </div>)}
           {userRoles?.is_secretary && !creatingForSelf && (
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <label>Créateur de la demande:</label>
               <select className="input" name="demandCreator" value={selectedUser} onChange={handleUserChange}>
                 {usersInSameDirection.map((user) => (

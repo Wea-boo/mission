@@ -150,8 +150,8 @@ const Visualization = () => {
             </p>
             <p><span className="info-label">Adresse de l'agence:</span> {demand.agency.address}</p>
             <p><span className="info-label">Téléphone de l'agence:</span> {demand.agency.phone}</p>
-            {demand.observation_manager && <p><span className="info-label">Observation Manager:</span> {demand.observation_manager}</p>}
-            {demand.observation_HR && <p><span className="info-label">Observation HR:</span> {demand.observation_HR}</p>}
+            {demand.observation_manager && <p><span className="info-label">Observation Directeur:</span> {demand.observation_manager}</p>}
+            {demand.observation_HR && <p><span className="info-label">Observation Responsable RH:</span> {demand.observation_HR}</p>}
           </section>
           <Link to="/Dashboard" className="back-button">
             Retour

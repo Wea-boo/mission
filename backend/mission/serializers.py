@@ -66,6 +66,22 @@ class DemandReadSerializer(serializers.ModelSerializer):
         model = Demand
         fields = '__all__'
 
+class DemandListSerializer(serializers.ModelSerializer):
+    creator = serializers.SerializerMethodField('get_creator_name')
+    assignee = serializers.SerializerMethodField('get_assignee_name')
+    state = serializers.CharField(source='state.name')
+    type = serializers.CharField(source='type.name')
+
+    class Meta:
+        model = Demand
+        fields = ['id','created_at', 'type', 'last_modified', 'creator', 'assignee', 'state']
+    
+    def get_creator_name(self, obj):
+        return f"{obj.creator.employee.first_name} {obj.creator.employee.last_name}"
+
+    def get_assignee_name(self, obj):
+        return f"{obj.assignee.employee.first_name} {obj.assignee.employee.last_name}"
+
 class DemandWriteSerializer(serializers.ModelSerializer):
     creator = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     assignee = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())

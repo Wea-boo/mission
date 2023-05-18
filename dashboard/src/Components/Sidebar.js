@@ -21,7 +21,7 @@ const Sidebar = ({children}) => {
             icon:<FaTh/>
         },
         {
-            path:"/Stats",
+            path:"/stats",
             name:"stats",
             icon:<FaRegChartBar/>
         },

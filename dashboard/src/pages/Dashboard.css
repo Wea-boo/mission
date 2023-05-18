@@ -1,42 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;600;800&family=Roboto:wght@400;700&display=swap');
-*{
-  font-family: Roboto;
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  height: 100vh;
 }
 
-h1 {
-  color: #2594f0;
-  margin-top: 70px;
-  padding-bottom: 0px;
+.filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
 }
 
-hr {
-  border: none;
-  border-radius: 10px;
-  height: 5px;
-  background: linear-gradient(to left, rgb(92, 160, 215), rgb(28, 7, 164));
-  margin-top: 5px;
-  margin-bottom: 20px;
-}
-
-.grid-container-1 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: center;
-  gap: 20px;
-}
-
-.grid-container-2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: center;
-  gap: 20px;
-}
-
-.card {
+.filter-card {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 150px;
+  height: 200px;
+  width: 400px; /* Increased width */
   background-color: #40C8F4;
   border-radius: 5px;
   color: #fff;
@@ -44,12 +27,14 @@ hr {
   text-decoration: none;
   transition: background 0.5s, transform 0.5s;
   font-size: 32px;
-  width: 350px;
-  margin: 0 auto;
+  margin: 20px;
 }
 
-.card:hover {
+.filter-card:hover {
   background: #0072BC;
   transform: translateY(-10px)
 }
-  
+
+h2 {
+  color: #fff;
+}

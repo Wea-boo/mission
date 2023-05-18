@@ -4,7 +4,8 @@ import Modal from 'react-modal';
 export const validationInfoRequirements = {
     'approuver': [{ type: 'textarea', label: 'Manager Observation', name: 'obs_manager', required: true}],
     'refuser': [{ type: 'textarea', label: 'Manager Observation', name: 'obs_manager', required: true}],
-    'validate': [{ type: 'textarea', label: 'HR Manager Observation', name: 'obs_hr', required: true}],
+    'valider': [{ type: 'textarea', label: 'HR Manager Observation', name: 'obs_hr', required: true}],
+    'refuser': [{ type: 'textarea', label: 'HR Manager Observation', name: 'obs_hr', required: true}],
     // Add more actions as required
 };
 
