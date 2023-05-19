@@ -108,7 +108,7 @@ const Visualization = () => {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <>
+        <div style={{height: "100%", width: "100%", maxWidth: "1200px"}}>
         <div className="actions-container">
           {Actions.map(action => (
             <button 
@@ -157,7 +157,7 @@ const Visualization = () => {
             Retour
           </Link>
         </div>
-        </>
+        </div>
       )}
     </div>
   );

@@ -1,10 +1,9 @@
 import React from 'react';
+import LoadingSpinner from '../Components/LoadingSpinner';
 
 const Stats = () => {
     return (
-        <div>
-            <h1>Stats</h1>
-        </div>
+        <LoadingSpinner />
     );
 };
 

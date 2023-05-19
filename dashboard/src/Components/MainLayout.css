@@ -1,0 +1,19 @@
+.app-layout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.main-section {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 200px); /* Assuming the sidebar width is 200px */
+    height: 100%;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}

@@ -40,34 +40,39 @@ const LoginForm = () => {
     }
 
     return (
-        <div className="form">
-        <form className="form-inner" onSubmit={handleSubmit}> 
-            <h2><img src={logo} width={60} height={50} id="login-cnr-logo"/></h2>
-            <div className="form-groop">
-                <input
-                    type="text"
-                    id="usrname"
-                    placeholder="Nom d'utilisateur"
-                    style={inputStyle}
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-            </div>
-            <div className="form-groop">
-                <input
-                    type="password"
-                    id="pwd"
-                    placeholder="Mot de passe"
-                    style={passwordInputStyle}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </div>
-            <button type="submit">Connexion</button>
-        </form>
+        <div className="form-outer">
+            <div className="form-wrapper">
+                <div className="form-shadow"></div>
+                <div className="form">
+                    <form className="form-inner" onSubmit={handleSubmit}> 
+                        <img src={logo} alt="logo" id="login-cnr-logo" />
+                        <div style={{width: "100%", display: "flex", flexDirection: "column",gap: "23.31px"}}>
+                        <div className="form-groop">
+                            <input
+                                type="text"
+                                id="usrname"
+                                placeholder="Nom d'utilisateur"
+                                style={inputStyle}
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </div>
+                        <div className="form-groop">
+                            <input
+                                type="password"
+                                id="pwd"
+                                placeholder="Mot de passe"
+                                style={passwordInputStyle}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        </div>
+                        <button type="submit">Connexion</button>
+                    </form>
+                </div>
+            </div>    
         </div>
-
     )
 }
-
-export default LoginForm
+export default LoginForm;

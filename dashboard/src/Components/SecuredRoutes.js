@@ -4,6 +4,7 @@ import { useAuth } from "../Contexts/AuthContexts";
 import Sidebar from "./Sidebar";
 import Navbar from "./NavBar";
 import LoadingSpinner from './LoadingSpinner';
+import MainLayout from "./MainLayout";
 
 function SecuredRoutes() {
   const { isLoggedIn, loading } = useAuth();
@@ -15,10 +16,9 @@ function SecuredRoutes() {
   return (
     isLoggedIn ? 
     <>
-      <Navbar />
-      <Sidebar>
+      <MainLayout>
         <Outlet />
-      </Sidebar>
+      </MainLayout>
     </> 
     : 
     <Navigate to="/login"/>

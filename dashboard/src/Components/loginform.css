@@ -4,143 +4,74 @@ body {
   font-family: Roboto;
 }
 
-.login-form-input {
-  background-color: blue;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin-bottom: 10px;
+.form-outer {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #D8E6EE;
+  position: relative;
 }
 
 .form {
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
+  padding-top: 27.09px;
+  padding-bottom: 43.47px;
+  width: 355.95px;
+  height: 352.8px;
+  background-color: #ffffff;
   display: flex;
-  background-color: #f8f8f8;
-}
-
-.form-input {
-  background-color: blue;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.form-button {
-  background-color: blue;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-
-.form {
-  height: 100vh;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  display: flex;
-  background-color: #f8f8f8;
+  position: relative;
+  z-index: 2; 
 }
-
+.form-shadow {
+  content: "";
+  position: absolute;
+  width: 355.95px;
+  height: 352.8px;
+  background-color: #0072BC;
+  z-index: 1;
+  bottom: -11.34px;
+  right: -12.6px;
+}
 .form-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0px 5px 10px rgba(42, 37, 210, 0.527);
+  height: 100%;
+  width: 267.75px;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-
-.form-inner h2 {
-  color: rgba(216, 230, 238, 1);
-  font-size: 28px;
-  font-weight: 500;
-  margin-bottom: 30px;
-  
+.form-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#login-cnr-logo {
+  width: 60px;
+  height: 50px;
 }
 
 .form-groop {
   position: relative;
-  /*display: block;*/
-  width: 300px;
-  margin-bottom: 15px;
   display: flex;
   align-items: center;
-  padding-left: 20px; 
+  width: 100%;
 }
 
 .form-groop input {
   display: block;
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: #f8f8f8;
-  transition: 0.4s;
-  padding-left: 40px;
-}
-
-.form-groop img {
-  margin-right: 10px;
-}
-.form-inner .form-groop label {
-  display: block;
-  color: #666;
-  font-size:15px;
-  margin-bottom: 20px;
-  transition: 0.4s;
-}
-
-.form-inner .form-groop:focus-within label {
-  color: #FE4880;
-}
-
-.form-inner .form-groop input {
-  display: block;
-  width: 300px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: #F8F8F8;
-  transition: 0.4s;
-  border-bottom: 2px solid blue;
-
-}
-
-.form-inner button[type="submit"] {
-  display: inline-block;
-  padding: 10px 15px;
-  background-image: linear-gradient( to right, #3641d7 50%, #2d4add 50%, #0a1c81);
-  background-size: 200%;
-  background-position: 0%;
-  transition: 0.4s;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
-  width: 200px;
-  margin-top: 30px;
-}
-
-.form-inner button[type="submit"]:hover {
-  background-position: 100% 0%;
-}
-
-
-.form-groop input[type="text"], .form-groop input[type="password"] {
-  border: 1px solid #ccc;
   padding: 10px;
   font-size: 16px;
-  background-color: #f8f8f8;
-  margin-bottom: 10px;
-  width: 300px;
-  box-sizing: border-box;
-  position: relative;
-  border-bottom: 2px solid blue;
   background-color: #D8E6EE;
-  
+  box-sizing: border-box;
+  border-bottom: 2px solid blue;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
 }
 
 .form-groop input[type="text"]:focus, .form-groop input[type="password"]:focus {
@@ -149,14 +80,21 @@ body {
   box-shadow: 0px 0px 3px rgba(0, 123, 255, 0.5);
 }
 
-.login-form-groop input[type="text"], .login-form-groop input[type="password"] {
-  background-color: blue;
-  color: rgb(12, 12, 12);
-  border: none;
-  padding: 10px;
-  margin-bottom: 10px;
-  width: 300px;
+.form-inner button[type="submit"] {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #0072BC;
+  background-size: 200%;
+  background-position: 0%;
+  transition: 0.4s;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  height: 45px;
+  border: 0;
 }
 
-
-
+.form-inner button[type="submit"]:hover {
+  background-position: 100% 0%;
+}

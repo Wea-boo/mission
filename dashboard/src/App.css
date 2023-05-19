@@ -11,5 +11,18 @@
 }
 main{
   width: 100%;
+}
+*::-webkit-scrollbar {
+  width: 5px;
+  right: 2px;
+}
 
+*::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+*::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 10px; 
+  border: 3px solid transparent;
 }
