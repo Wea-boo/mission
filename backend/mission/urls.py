@@ -24,4 +24,7 @@ urlpatterns = [
     path('create-others-demand/', CreateOthersDemandView.as_view(), name="create_demand_pc"),
     path('demands/', DemandList.as_view(), name='demand-list'),
     path('dashboard-filters/', dashboard_filters, name='dashboard_filters'),
+    path('demand/<int:pk>/events/', DemandEventsView.as_view(), name='demand-events'),
+    path('events/<int:event_id>/validationinfo/', EventValidationInfoView.as_view(), name='event-validationinfo'),
+    path('download/<str:file_name>/', download, name='download'),
 ]

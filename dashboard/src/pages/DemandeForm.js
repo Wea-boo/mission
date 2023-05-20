@@ -64,6 +64,7 @@ const DemandeForm = () => {
       "destination": event.target.agency.value,
       "departure": event.target.departTime.value,
       "return": event.target.returnTime.value,
+      "mission_summary": event.target.mission_summary.value,
       "type_demand": 1
     }
     const creatingForOthers = userRoles?.is_secretary && !creatingForSelf && selectedUser;
@@ -116,15 +117,16 @@ const DemandeForm = () => {
           </select>
           <label>Motif de déplacement:</label>
           <textarea className="input-motif" rows="2" name="motif" required></textarea>
-
+          <label>Résumé de la mission:</label>
+          <textarea className="input-motif" rows="8" name="mission_summary" style={{height: "150px"}} required></textarea>
           <label>Moyen de transport:</label>
-          <select className="input" name="vehicleType" value={vehicleType} onChange={handleVehicleTypeChange}>
+          <select className="input" name="vehicleType" value={vehicleType} onChange={handleVehicleTypeChange} required>
             <option value="0">Véhicule Service</option>
             <option value="1">Véhicule personnel</option>
           </select>
 
           <label>Agence:</label>
-          <select className="input" name="agency">
+          <select className="input" name="agency" required>
             <option value="" hidden>--Choisir une agence--</option>
             {agencies.map((agency) => (
             <option key={agency.id} value={agency.id}>
@@ -135,11 +137,11 @@ const DemandeForm = () => {
           <div className="date-dem-container">
             <div className="date-dem-field">
               <label>Date et heure départ:</label>
-              <input type="datetime-local" className="input" name="departTime"/>
+              <input type="datetime-local" className="input" name="departTime" required/>
             </div>
             <div className="date-dem-field">
               <label>Date et heure retour:</label>
-              <input type="datetime-local" className="input" name="returnTime"/>            
+              <input type="datetime-local" className="input" name="returnTime" required/>            
             </div>
           </div>
           <div className="button-container">

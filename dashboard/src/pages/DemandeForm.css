@@ -39,7 +39,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .demande-form label {
@@ -103,7 +104,7 @@ border: 2px solid #d8d8d9;
 margin-bottom: 20px;
 resize: none;
 font-family: inherit;
-height: 40px !important;
+height: 40px;
 overflow: hidden;
 }
 

@@ -88,8 +88,7 @@ class MissionOrder(models.Model):
     use_personal_vehicle = models.BooleanField(null=False)
     departing = models.DateTimeField()
     returning = models.DateTimeField()
-    observation_manager = models.TextField()
-    observation_HR = models.TextField()
+    mission_summary = models.TextField()
     demand = models.OneToOneField(Demand, null=False, on_delete=models.CASCADE)
     agency = models.ForeignKey(Agency, null=False, on_delete=models.CASCADE)
 
@@ -112,12 +111,16 @@ class Event(models.Model):
     transition = models.ForeignKey(Transition, null=False, on_delete=models.CASCADE)
     time_event = models.DateTimeField(auto_now_add=True)
 
-    
     def __str__(self):
         return f"{self.transition} par {self.trigger_user.employee} le {self.time_event}"
 
     class Meta:
         unique_together = ['demand', 'trigger_user', 'transition']
+
+class ValidationInfo(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    observation_text = models.TextField()
+    attachment = models.FileField(upload_to='attachments/')
 
 class MissionFee(models.Model):
     demand = models.OneToOneField(Demand, null=False, on_delete=models.CASCADE)

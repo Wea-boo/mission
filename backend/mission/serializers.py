@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from datetime import datetime
 from .models import *
 import pytz
+import magic
 
 User = get_user_model()
 
@@ -66,6 +67,19 @@ class DemandReadSerializer(serializers.ModelSerializer):
         model = Demand
         fields = '__all__'
 
+class ValidationInfoWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ValidationInfo
+        fields = ['observation_text', 'attachment']
+
+    def validate_attachment(self, value):
+        allowed_mime_types = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+        mime_type = magic.from_buffer(value.read(), mime=True)  # You will need to install python-magic for this
+        if mime_type not in allowed_mime_types:
+            raise serializers.ValidationError('Invalid file type. Allowed file types are: pdf, doc, docx.')
+
+        return value
+
 class DemandListSerializer(serializers.ModelSerializer):
     creator = serializers.SerializerMethodField('get_creator_name')
     assignee = serializers.SerializerMethodField('get_assignee_name')
@@ -100,8 +114,7 @@ class AgencySerializer(serializers.ModelSerializer):
 class MissionOrderWriteSerializer(serializers.ModelSerializer):
     demand = serializers.PrimaryKeyRelatedField(queryset=Demand.objects.all())
     agency = serializers.PrimaryKeyRelatedField(queryset=Agency.objects.all())
-    observation_manager = serializers.CharField(required=False)
-    observation_HR = serializers.CharField(required=False)
+    mission_summary = serializers.CharField(required=True)
 
     def validate(self, data):
         if data['returning'] <= data['departing']:
@@ -138,10 +151,17 @@ class TransitionSerializer(serializers.ModelSerializer):
 class EventReadSerializer(serializers.ModelSerializer):
     demand = DemandReadSerializer()
     trigger_user = CustomUserSerializer()
-    transit = TransitionSerializer()
+    transition = TransitionSerializer()
 
     class Meta:
         model = Event
+        fields = '__all__'
+
+class ValidationInfoReadSerializer(serializers.ModelSerializer):
+    event = EventReadSerializer()
+
+    class Meta:
+        model = ValidationInfo
         fields = '__all__'
 
 class EventWriteSerializer(serializers.ModelSerializer):
@@ -167,3 +187,28 @@ class TypeMissionSerializer(serializers.ModelSerializer):
         model = TypeMission
         fields = '__all__'
 
+class SimplifiedTransitionSerializer(serializers.ModelSerializer):
+    start_state = serializers.CharField(source='start_state.name')
+    end_state = serializers.CharField(source='end_state.name')
+
+    class Meta:
+        model = Transition
+        fields = ['id', 'start_state', 'end_state', 'description', 'action']
+
+class SimplifiedValidationInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ValidationInfo
+        fields = ['observation_text', 'attachment']
+
+
+class SimplifiedEventSerializer(serializers.ModelSerializer):
+    trigger_user = serializers.SerializerMethodField('get_trigger_user_full_name')
+    transition = SimplifiedTransitionSerializer()
+    validation_info = SimplifiedValidationInfoSerializer()
+
+    class Meta:
+        model = Event
+        fields = ['id', 'trigger_user', 'transition', 'time_event', 'validation_info']
+
+    def get_trigger_user_full_name(self, obj):
+        return f"{obj.trigger_user.employee.first_name} {obj.trigger_user.employee.last_name}"

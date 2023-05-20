@@ -3,21 +3,22 @@ from django.contrib.auth import authenticate, login
 from rest_framework import permissions, serializers
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.permissions import IsAuthenticated
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse, Http404
 from django.views import View
 from knox.auth import TokenAuthentication
 from rest_framework.response import Response
 from django.conf import settings
 from .models import *
 from .serializers import *
-from rest_framework import status
 from .permissions import *
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.db import transaction
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from django.shortcuts import get_object_or_404
+import os
 
 # ALLOWED_ACTIONS = {
 #     "Manager": {
@@ -96,6 +97,7 @@ class CreateOwnDemandView(APIView):
             "agency": request.data["destination"],
             "departing": request.data["departure"],
             "returning": request.data["return"],
+            "mission_summary": request.data["mission_summary"],
             "demand": demand.id
         }
         mission_order_serializer = MissionOrderWriteSerializer(data=mission_order_data)
@@ -129,6 +131,7 @@ class CreateOthersDemandView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, IsSecretary]
 
+    @transaction.atomic
     def post(self, request):
         # Get the user who submitted the form
         user = request.user
@@ -157,6 +160,7 @@ class CreateOthersDemandView(APIView):
             "agency": request.data["destination"],
             "departing": request.data["departure"],
             "returning": request.data["return"],
+            "mission_summary": request.data["mission_summary"],
             "demand": demand.id
         }
         mission_order_serializer = MissionOrderWriteSerializer(data=mission_order_data)
@@ -191,7 +195,6 @@ class DemandDetailsView(generics.RetrieveAPIView):
     permission_classes=[IsAuthenticated]
     queryset = Demand.objects.all()
     serializer_class = DemandReadSerializer
-
 
     def retrieve(self, request, *args, **kwargs):
         demand_instance = self.get_object()
@@ -237,6 +240,7 @@ class CreatedToWaitingApproval(APIView):
                 request, message="You are not the assignee of this demand."
             )
 
+    @transaction.atomic
     def post(self, request, pk):
         user = request.user
         demand = Demand.objects.get(id=pk)
@@ -261,7 +265,14 @@ class CreatedToWaitingApproval(APIView):
         # Check if a new assignee was found.
         if new_assignee is None:
             return Response({"message": "No suitable user found to assign the demand."}, status=status.HTTP_400_BAD_REQUEST)
-    
+        
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
+
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         latest_workflow = demand.state.workflow
         transition = get_transition("Crée", "Attente Approbation", latest_workflow)
         event_data = {
@@ -275,6 +286,9 @@ class CreatedToWaitingApproval(APIView):
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         # Update the state of the Demand to "Attente Validation"
+
+        validation_info = validation_info_serializer.save(event=event)
+
         awaiting_validation_state = StateDemand.objects.get(name="Attente Approbation")
         demand.state = awaiting_validation_state
         demand.assignee = new_assignee
@@ -305,12 +319,12 @@ class WaitingApprovalToApproved(APIView):
             return Response({"message": "Invalid transition. Demand is not in the 'Waiting Approval' state."}, status=status.HTTP_400_BAD_REQUEST)
         
         # Retrieve validation info from request
-        validation_info = request.data
-        
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
 
-        # Check if required fields are present in validation info
-        if 'obs_manager' not in validation_info:
-            return Response({"message": "Required fields missing in validation info."}, status=status.HTTP_400_BAD_REQUEST)
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Get HR Agent user/group
         hr_agent_group = Group.objects.get(profile__name='Agent RH')
@@ -322,11 +336,6 @@ class WaitingApprovalToApproved(APIView):
         # Check if an HR Agent user was found.
         if hr_agent_user is None:
             return Response({"message": "No suitable HR Agent user found to assign the demand."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Update the observation_manager field in MissionOrder associated with the demand
-        mission_order = demand.missionorder
-        mission_order.observation_manager = validation_info['obs_manager']
-        mission_order.save()
 
         # Record the transition event
         latest_workflow = demand.state.workflow
@@ -342,6 +351,8 @@ class WaitingApprovalToApproved(APIView):
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        validation_info = validation_info_serializer.save(event=event)
+
         approved_state = StateDemand.objects.get(name="Approuvé")
         demand.state = approved_state
         demand.assignee = hr_agent_user
@@ -372,12 +383,12 @@ class WaitingApprovalToDenied(APIView):
             return Response({"message": "Invalid transition. Demand is not in the 'Waiting Approval' state."}, status=status.HTTP_400_BAD_REQUEST)
         
         # Retrieve validation info from request
-        validation_info = request.data
-        
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
 
-        # Check if required fields are present in validation info
-        if 'obs_manager' not in validation_info:
-            return Response({"message": "Required fields missing in validation info."}, status=status.HTTP_400_BAD_REQUEST)
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Get HR Agent user/group
         demand_creator = demand.creator
@@ -403,6 +414,8 @@ class WaitingApprovalToDenied(APIView):
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        validation_info = validation_info_serializer.save(event=event)
+
         approved_state = StateDemand.objects.get(name="Approuvé")
         demand.state = approved_state
         demand.assignee = demand_creator
@@ -433,11 +446,12 @@ class WaitingValidationToValidated(APIView):
             return Response({"message": "Invalid transition. Demand is not in the 'Waiting Validation' state."}, status=status.HTTP_400_BAD_REQUEST)
         
         # Retrieve validation info from request
-        validation_info = request.data
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
 
-        # Check if required fields are present in validation info
-        if 'obs_hr' not in validation_info:
-            return Response({"message": "Required fields missing in validation info."}, status=status.HTTP_400_BAD_REQUEST)
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Retrieve the employee who created the demand
         creator = demand.creator
@@ -461,6 +475,8 @@ class WaitingValidationToValidated(APIView):
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        validation_info = validation_info_serializer.save(event=event)
+
         validated_state = StateDemand.objects.get(name="Validé")
         demand.state = validated_state
         demand.assignee = creator
@@ -490,6 +506,14 @@ class CreatedToCancelled(APIView):
         if demand.state.name != "Crée":
             return Response({"message": "Invalid transition. Demand is not in the 'Created' state."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
+
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         # Record the transition event
         latest_workflow = demand.state.workflow
         transition = get_transition("Crée", "Annulé", latest_workflow)
@@ -503,12 +527,12 @@ class CreatedToCancelled(APIView):
             event = event_serializer.save()
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        validation_info = validation_info_serializer.save(event=event)
 
         # Change the state of the Demand to "Cancelled"
         cancelled_state = StateDemand.objects.get(name="Annulé")
         demand.state = cancelled_state
-
-        # Set the assignee to the creator of the demand
         demand.assignee = demand.creator
         demand.save()
 
@@ -537,11 +561,12 @@ class WaitingValidationToDenied(APIView):
             return Response({"message": "Invalid transition. Demand is not in the 'Waiting Validation' state."}, status=status.HTTP_400_BAD_REQUEST)
         
         # Retrieve validation info from request
-        validation_info = request.data
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
 
-        # Check if required fields are present in validation info
-        if 'obs_hr' not in validation_info:
-            return Response({"message": "Required fields missing in validation info."}, status=status.HTTP_400_BAD_REQUEST)
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         # Retrieve the employee who created the demand
         creator = demand.creator
@@ -565,6 +590,8 @@ class WaitingValidationToDenied(APIView):
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        validation_info = validation_info_serializer.save(event=event)
+
         denied_state = StateDemand.objects.get(name="Annulé")
         demand.state = denied_state
         demand.assignee = creator
@@ -594,6 +621,13 @@ class ApprovedToWaitingValidation(APIView):
         if demand.state.name != "Approuvé":
             return Response({"message": "Invalid transition. Demand is not in the 'Approved' state."}, status=status.HTTP_400_BAD_REQUEST)
 
+        observation_text = request.data.get('observation_text')
+        attachment = request.FILES.get('attachment')
+
+        validation_info_serializer = ValidationInfoWriteSerializer(data={"observation_text": observation_text, "attachment": attachment})
+        if not validation_info_serializer.is_valid():
+            return Response(validation_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         # Get HR Manager user/group
         hr_manager_group = Group.objects.get(profile__name='Responsable RH')
         hr_manager_user = CustomUser.objects.filter(
@@ -619,6 +653,8 @@ class ApprovedToWaitingValidation(APIView):
         else:
             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        validation_info = validation_info_serializer.save(event=event)
+
         waiting_validation_state = StateDemand.objects.get(name="Attente Validation")
         demand.state = waiting_validation_state
         demand.assignee = hr_manager_user
@@ -668,6 +704,8 @@ class CustomPagination(PageNumberPagination):
 class DemandList(generics.GenericAPIView):
     serializer_class = DemandListSerializer
     pagination_class = CustomPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         queryset = Demand.objects.all().order_by('-created_at')
@@ -702,6 +740,7 @@ class DemandList(generics.GenericAPIView):
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
 def dashboard_filters(request):
     user = request.user
     filters = []
@@ -765,3 +804,36 @@ def dashboard_filters(request):
         })
 
     return Response(filters)
+
+class DemandEventsView(generics.GenericAPIView):
+    serializer_class = SimplifiedEventSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        demand = get_object_or_404(Demand, pk=pk)
+        events = Event.objects.filter(demand=demand).prefetch_related(Prefetch('validationinfo_set', queryset=ValidationInfo.objects.all(), to_attr='validation_info'))
+        for event in events:
+            event.validation_info = event.validation_info[0] if event.validation_info else None
+        serializer = self.get_serializer(events, many=True)
+        return Response(serializer.data)
+
+
+class EventValidationInfoView(generics.RetrieveAPIView):
+    queryset = Event.objects.all()
+    serializer_class = ValidationInfoReadSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'event_id'
+    lookup_url_kwarg = 'event_id'
+    
+    def get_object(self):
+        event = super().get_object()
+        validation_info = get_object_or_404(ValidationInfo, event=event)
+        return validation_info
+
+def download(request, file_name):
+    file_path = os.path.join(settings.MEDIA_ROOT, file_name)
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True)
+    raise Http404

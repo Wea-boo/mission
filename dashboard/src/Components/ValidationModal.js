@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-export const validationInfoRequirements = {
-    'approuver': [{ type: 'textarea', label: 'Manager Observation', name: 'obs_manager', required: true}],
-    'refuser': [{ type: 'textarea', label: 'Manager Observation', name: 'obs_manager', required: true}],
-    'valider': [{ type: 'textarea', label: 'HR Manager Observation', name: 'obs_hr', required: true}],
-    'refuser': [{ type: 'textarea', label: 'HR Manager Observation', name: 'obs_hr', required: true}],
-    // Add more actions as required
-};
-
 const customStyles = {
     content: {
       top: '50%',
@@ -31,18 +23,29 @@ const customStyles = {
 };
 
 
-const ValidationModal = ({ isOpen, onRequestClose, onSubmit }) => {
+const ValidationModal = ({ isOpen, onRequestClose, onSubmit, missionSummary }) => {
     const [observation, setObservation] = useState('');
     const [attachment, setAttachment] = useState(null);
-
-    const handleSubmit = () => {
-        onSubmit({ observation, attachment });
-    };
   
+    const handleSubmit = () => {
+      onSubmit(observation, attachment);
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']; // Add more if needed
+        if (!allowedFileTypes.includes(file.type)) {
+            alert('Please select a valid file type (.pdf, .doc, .docx)');
+            return;
+        }
+        setAttachment(file);
+    };
     return (
         <Modal isOpen={isOpen} onRequestClose={onRequestClose} style={customStyles}>
-            <h2 style={{ marginBottom: '20px' }}>Enter Validation Information</h2>
-            <div style={{ marginBottom: '15px' }}>
+                <h2 style={{ marginBottom: '20px' }}>Résumé de la mission:</h2>
+                <div style={{ marginBottom: '15px' }}>
+                    <p style={{ marginBottom: '15px' }}>{missionSummary}</p>
+                <div/>
                 <label style={{ display: 'block', marginBottom: '5px' }}>Observation</label>
                 <textarea 
                     rows="4"
@@ -57,7 +60,7 @@ const ValidationModal = ({ isOpen, onRequestClose, onSubmit }) => {
                 <input 
                     type="file"
                     required
-                    onChange={e => setAttachment(e.target.files[0])} 
+                    onChange={handleFileChange}
                     style={{ display: 'block' }}
                 />
             </div>

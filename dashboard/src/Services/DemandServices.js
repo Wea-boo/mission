@@ -44,20 +44,40 @@ class DemandServices {
             withCredentials: true
           })
     }
-    triggerTransition(id, action, validationInfo){
+    triggerTransition(id, action, observation, attachment){
       action = action.replace(' ', '-');
       const token = Cookies.get('auth_token');
       const headers = {};
-  
+
       if (token) {
         headers.Authorization = `Token ${token}`;
         console.log(headers)
       }
-      
-      return axios.post(`/api/demand/${id}/${action}/`, validationInfo,{
+      let formData = new FormData();
+
+      formData.append('observation_text', observation);
+      if (attachment) {
+        formData.append('attachment', attachment);
+      }
+
+      return axios.post(`/api/demand/${id}/${action}/`, formData,{
           headers: headers,
           withCredentials: true
       })
+  }
+  getDemandEvents(id){
+    const token = Cookies.get('auth_token');
+    const headers = {};
+
+    if (token) {
+      headers.Authorization = `Token ${token}`;
+      console.log(headers)
+    }
+    
+    return axios.get(`/api/demand/${id}/events/`, {
+      headers: headers,
+      withCredentials: true
+    })
   }
 }
 

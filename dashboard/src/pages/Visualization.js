@@ -5,7 +5,7 @@ import axios from 'axios';
 import LoadingSpinner from "../Components/LoadingSpinner";
 import DemandServices from "../Services/DemandServices";
 import ValidationModal, {validationInfoRequirements} from "../Components/ValidationModal";
-
+import EventTable from '../Components/EventTable';
 
 const UserInfo = ({ title, user }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,28 +38,26 @@ const Visualization = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [Actions, setActions] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [currentAction, setCurrentAction] = useState(null); // Add state for the current action
-
-  // (Keep useEffect as is)
+  const [currentAction, setCurrentAction] = useState(null);
+  const [observation, setObservation] = useState('');
+  const [attachment, setAttachment] = useState(null);
+  const [events, setEvents] = useState([]);
 
   const openModal = (action) => {
-    // Check if the action requires validation
-    if (validationInfoRequirements[action?.action]) {
-      setCurrentAction(action);
-      setModalOpen(true);
-    } else {
-      // If no validation is required, trigger the transition directly
-      handleButtonClick(action.action);
-    }
+    setCurrentAction(action);
+    setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
+    setCurrentAction(null);
+    setObservation('');
+    setAttachment(null);
   };
 
-  const handleSubmit = async (validationInfo) => {
+  const handleSubmit = async (observation, attachment) => {
     try {
-      await DemandServices.triggerTransition(demand_id, currentAction?.action, validationInfo);
+      await DemandServices.triggerTransition(demand_id, currentAction?.action, observation, attachment);
       closeModal();
     } catch (error) {
       console.error(`Error triggering transition '${currentAction?.action}':`, error);
@@ -85,23 +83,19 @@ const Visualization = () => {
         console.error('Error fetching transitions:', error);
       }
     };
+    const fetchDemandEvents = async () => {
+      try {
+        const response = await DemandServices.getDemandEvents(demand_id);
+        setEvents(response.data);
+      } catch (error) {
+        console.error('Error fetching demand events:', error);
+      }
+    }
 
     fetchDemandDetails();
     fetchTransitions();
+    fetchDemandEvents();
   }, [demand_id]);
-
-
-  const handleButtonClick = async (action) => {
-    try {
-      await DemandServices.triggerTransition(demand_id, action);
-
-    } catch (error) {
-      console.error(`Error triggering transition '${action}':`, error);
-      // Handle the error here, for example show a notification or an alert
-      alert(`Failed to trigger transition: ${error.message}`);
-    }
-  };
-
 
   return (
     <div className="Visualization">
@@ -109,22 +103,22 @@ const Visualization = () => {
         <LoadingSpinner />
       ) : (
         <div style={{height: "100%", width: "100%", maxWidth: "1200px"}}>
-        <div className="actions-container">
-          {Actions.map(action => (
-            <button 
-              key={action.id} 
-              className="action-button"
-              onClick={() => openModal(action)}>
-              {action.action}
-            </button>
-          ))}
-        </div>
-        <ValidationModal 
-          isOpen={modalOpen} 
-          onRequestClose={closeModal} 
-          onSubmit={handleSubmit} 
-          action={currentAction} 
-        />
+          <div className="actions-container">
+            {Actions.map(action => (
+              <button 
+                key={action.id} 
+                className="action-button"
+                onClick={() => openModal(action)}>
+                {action.action}
+              </button>
+            ))}
+          </div>
+          <ValidationModal 
+            isOpen={modalOpen} 
+            onRequestClose={closeModal} 
+            onSubmit={handleSubmit}
+            missionSummary={demand.mission_summary} 
+          />
         <div className="details-container">
           <section className="demande-info info-section">
             <h2>Informations Demande:</h2>
@@ -156,11 +150,11 @@ const Visualization = () => {
           <Link to="/Dashboard" className="back-button">
             Retour
           </Link>
+          <EventTable events={events} />
         </div>
         </div>
       )}
     </div>
   );
 };
-
 export default Visualization;

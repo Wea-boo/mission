@@ -1,0 +1,87 @@
+/* EventModal.css */
+.event-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.event-modal-overlay.ReactModal__Overlay--after-open {
+    opacity: 1;
+}
+
+.event-modal-overlay.ReactModal__Overlay--before-close {
+    opacity: 0;
+}
+.event-modal {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    outline: none;
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.5s ease;
+}
+
+.event-modal h2 {
+    margin-bottom: 15px;
+    color: #333333;
+    font-size: 24px;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-text {
+    border: 1px solid #dedede;
+    padding: 15px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    word-break: break-word;
+}
+
+.modal-text p {
+    color: #333333;
+    font-size: 16px;
+}
+
+.modal-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+.modal-download:hover {
+    background-color: #0056b3;
+}
+
+.modal-close-button {
+    background-color: #dc3545;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.modal-close-button:hover {
+    background-color: #c82333;
+}
