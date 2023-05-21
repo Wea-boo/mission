@@ -7,6 +7,8 @@ import LoadingSpinner from '../Components/LoadingSpinner';
 const Demandes = () => {
     const [demands, setDemands] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagesCount, setPagesCount] = useState(1);
     const filterServices = new FilterServices();
     const location = useLocation();
     const navigate = useNavigate();
@@ -28,10 +30,12 @@ const Demandes = () => {
               filter.creator,
               filter.assignee,
               states,
-              null
+              null,
+              currentPage
             );
-            console.log(response.data.results)
+  
             setDemands(response.data.results);
+            setPagesCount(Math.ceil(response.data.count / 4)); // assuming 10 is the number of items per page
           } else {
             console.log("no filter found");
           }
@@ -42,10 +46,18 @@ const Demandes = () => {
       };
       
       getFilteredDemands();
-    }, [filter]);
+    }, [filter, currentPage]);
 
     const handleVoirDemandeClick = (id) => {
       navigate(`/demand/${id}`);
+    };
+
+    const handlePrevious = () => {
+      setCurrentPage((old) => Math.max(old - 1, 1));
+    };
+  
+    const handleNext = () => {
+      setCurrentPage((old) => Math.min(old + 1, pagesCount));
     };
 
     if (loading) {
@@ -54,6 +66,7 @@ const Demandes = () => {
 
     return (
       <div className="table-container">
+        <div className="filtering-space"></div>
         <table className="custom-table">
           <thead>
             <tr>
@@ -84,6 +97,11 @@ const Demandes = () => {
             ))}
           </tbody>
         </table>
+        <div className="pagination">
+          <button onClick={handlePrevious} disabled={currentPage === 1}>Previous</button>
+          <span>Page {currentPage} of {pagesCount}</span>
+          <button onClick={handleNext} disabled={currentPage === pagesCount}>Next</button>
+        </div>
       </div>
     );
 };

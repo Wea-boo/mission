@@ -26,5 +26,6 @@ urlpatterns = [
     path('dashboard-filters/', dashboard_filters, name='dashboard_filters'),
     path('demand/<int:pk>/events/', DemandEventsView.as_view(), name='demand-events'),
     path('events/<int:event_id>/validationinfo/', EventValidationInfoView.as_view(), name='event-validationinfo'),
-    path('download/<str:file_name>/', download, name='download'),
+    path('total_demands_<str:time_frame>/', total_demands),
+    path('avg_demands_<str:time_frame>/', avg_demands),
 ]

@@ -4,6 +4,8 @@ from rest_framework import permissions, serializers
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import generics, status, viewsets
+from django.db.models import Count, Avg
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth, TruncYear
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse, FileResponse, Http404
 from django.views import View
@@ -19,6 +21,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.shortcuts import get_object_or_404
 import os
+from django.utils import timezone
+import datetime
 
 # ALLOWED_ACTIONS = {
 #     "Manager": {
@@ -697,7 +701,7 @@ class UserProfile(APIView):
         }, status=status.HTTP_200_OK)
 
 class CustomPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 4
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -837,3 +841,29 @@ def download(request, file_name):
     if os.path.exists(file_path):
         return FileResponse(open(file_path, 'rb'), as_attachment=True)
     raise Http404
+
+def total_demands(request, time_frame):
+    if time_frame == 'all':
+        total = Demand.objects.count()
+    elif time_frame == 'year':
+        total = Demand.objects.filter(created_at__year=timezone.now().year).count()
+    elif time_frame == 'month':
+        total = Demand.objects.filter(created_at__month=timezone.now().month, created_at__year=timezone.now().year).count()
+    elif time_frame == 'week':
+        total = Demand.objects.filter(created_at__date__gte=timezone.now() - datetime.timedelta(days=7)).count()
+    else:
+        return JsonResponse({'error': 'Invalid time frame'}, status=400)
+    
+    return JsonResponse({'total': total})
+
+def avg_demands(request, time_frame):
+    if time_frame == 'day':
+        avg = Demand.objects.annotate(date=TruncDay('created_at')).values('date').annotate(avg=Avg('id')).aggregate(Avg('avg'))
+    elif time_frame == 'week':
+        avg = Demand.objects.annotate(week=TruncWeek('created_at')).values('week').annotate(avg=Avg('id')).aggregate(Avg('avg'))
+    elif time_frame == 'month':
+        avg = Demand.objects.annotate(month=TruncMonth('created_at')).values('month').annotate(avg=Avg('id')).aggregate(Avg('avg'))
+    else:
+        return JsonResponse({'error': 'Invalid time frame'}, status=400)
+    
+    return JsonResponse({'average': avg})

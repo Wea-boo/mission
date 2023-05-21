@@ -21,7 +21,7 @@ class FilterServices {
       });
     }
   
-    getFilteredDemands(creator = null, assignee = null, state = null, type = null) {
+    getFilteredDemands(creator = null, assignee = null, state = null, type = null, page = 1) {
       const token = Cookies.get('auth_token');
       const headers = {};
   
@@ -36,6 +36,8 @@ class FilterServices {
       if (assignee) params.append('assignee', assignee);
       if (state) params.append('state', state);
       if (type) params.append('_type', type);
+      
+      params.append('page', page);
       
       endpoint += `?${params.toString()}`;
   
