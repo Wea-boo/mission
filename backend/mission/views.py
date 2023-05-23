@@ -4,8 +4,8 @@ from rest_framework import permissions, serializers
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import generics, status, viewsets
-from django.db.models import Count, Avg
-from django.db.models.functions import TruncDay, TruncWeek, TruncMonth, TruncYear
+from django.db.models import Count, Avg, Value, CharField, F
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth, TruncYear, Concat
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse, FileResponse, Http404
 from django.views import View
@@ -867,3 +867,69 @@ def avg_demands(request, time_frame):
         return JsonResponse({'error': 'Invalid time frame'}, status=400)
     
     return JsonResponse({'average': avg})
+
+
+from django.db.models import Value as V
+from django.db.models.functions import Concat
+
+class EmployeeDemandStatsView(APIView):
+    """
+    Returns a list of employees with the highest number of created demands.
+    """
+    def get(self, request):
+        N = int(request.query_params.get('N', 10))  # default to 10 if N is not provided
+        M = int(request.query_params.get('M', 20))  # default to 20 if M is not provided
+
+        # Get the counts
+        employee_counts = (
+            Demand.objects.values('creator__employee_id')
+            .annotate(created_demands=Count('creator'))
+            .order_by('-created_demands')
+        )
+
+        # Fetch only the top N
+        top_counts = employee_counts[:N]
+
+        # Get the names
+        employee_names = Employee.objects.filter(customuser__in=top_counts.values('creator')).annotate(
+            full_name=Concat('first_name', V(' '), 'last_name')
+        ).values('id', 'full_name')
+
+        # Create a dictionary for easier lookup
+        name_dict = {item['id']: item['full_name'] for item in employee_names}
+
+        # Merge the results
+        result = []
+        for count in top_counts:
+            result.append({
+                'full_name': name_dict.get(count['creator__employee_id'], 'Unknown'),
+                'created_demands': count['created_demands'],
+            })
+
+        # Handle the remaining employees
+        remaining_counts = employee_counts[N:M]
+
+        remaining_names = Employee.objects.filter(customuser__in=remaining_counts.values('creator')).annotate(
+            full_name=Concat('first_name', V(' '), 'last_name')
+        ).values('id', 'full_name')
+
+        remaining_name_dict = {item['id']: item['full_name'] for item in remaining_names}
+
+        for count in remaining_counts:
+            result.append({
+                'full_name': remaining_name_dict.get(count['creator__employee_id'], 'Unknown'),
+                'created_demands': count['created_demands'],
+            })
+        return Response(result)
+    
+class MissionTypeStatsView(APIView):
+    """
+    Returns a list of mission types and their respective count.
+    """
+    def get(self, request):
+        mission_types = (
+            MissionOrder.objects.values('mission_type__name')
+            .annotate(mission_count=Count('mission_type'))
+            .order_by('-mission_count')
+        )
+        return Response(mission_types)

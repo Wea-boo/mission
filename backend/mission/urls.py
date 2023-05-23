@@ -28,4 +28,6 @@ urlpatterns = [
     path('events/<int:event_id>/validationinfo/', EventValidationInfoView.as_view(), name='event-validationinfo'),
     path('total_demands_<str:time_frame>/', total_demands),
     path('avg_demands_<str:time_frame>/', avg_demands),
+    path('highest-demand-employees/', EmployeeDemandStatsView.as_view(), name='top-employee'),
+    path('number-by-mission-type/', MissionTypeStatsView.as_view(), name='type_pie'),
 ]

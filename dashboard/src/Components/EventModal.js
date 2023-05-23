@@ -19,13 +19,16 @@ const EventModal = ({isOpen, onRequestClose, validationInfo}) => {
               <div className="modal-text">
                 <p>{validationInfo?.observation_text}</p>
               </div>
-              <div className="modal-download">
+              <div className='modal-buttons'>
                 <a href={validationInfo?.attachment} download>
-                  <FontAwesomeIcon icon={faDownload} /> Download Attachment
+              <button className="modal-download">
+                  <FontAwesomeIcon icon={faDownload} />
+              </button>
                 </a>
+              <button className="modal-close-button" onClick={onRequestClose}>Close</button>
               </div>
             </div>
-            <button className="modal-close-button" onClick={onRequestClose}>Close</button>
+            
         </Modal>
     );
 };

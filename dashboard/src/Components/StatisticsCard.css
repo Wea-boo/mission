@@ -1,14 +1,30 @@
 .statistics__cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     gap: 20px;
+    padding: 20px;
+    background-color: #F6F8FA;
+    border-radius: 8px;
 }
 
 .statistics__card {
+    flex: 1 1 300px; /* Adjust the "300px" as needed for smaller screens */
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.statistics__card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.statistics__card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .statistics__card-content h3 {
@@ -17,8 +33,25 @@
     font-weight: 600;
 }
 
-.statistics__card-content p {
+.statistics__card-content__select-wrapper {
+    margin-bottom: 15px;
+}
+
+.statistics__card-content__select-wrapper select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    appearance: none;
+}
+
+.statistics__card-content__countup {
     margin: 0;
     font-size: 36px;
     font-weight: 700;
+    color: #007BFF;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
