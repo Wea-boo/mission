@@ -17,12 +17,14 @@ const StatisticsCards = () => {
 
     const fetchTotalDemands = async (timeFrame) => {
         const response = await axios.get(`http://localhost:8000/api/total_demands_${timeFrame}/`);
-        return response.data.total;  // Assuming 'totalDemands' is the property you need
+        console.log(response.data)
+        return response.data.total;
     };
     
     const fetchAvgDemands = async (timeFrame) => {
         const response = await axios.get(`http://localhost:8000/api/avg_demands_${timeFrame}/`);
-        return response.data.average.avg__avg;  // Assuming 'avgDemands' is the property you need
+        console.log(response.data)
+        return response.data.average.avg__avg;
     };
 
     const fetchActiveUsers = async () => {
@@ -43,10 +45,10 @@ const StatisticsCards = () => {
             const totalUsers = await fetchTotalUsers();
 
             setStats({
-                totalDemands: totalDemands,
-                avgDemands: avgDemands,
-                activeUsers: activeUsers,
-                totalUsers: totalUsers
+                totalDemands: totalDemands ? totalDemands : 0,
+                avgDemands: avgDemands ? avgDemands : 0,
+                activeUsers: activeUsers ? activeUsers : 0,
+                totalUsers: totalUsers ? totalUsers : 0,
             });
         };
 

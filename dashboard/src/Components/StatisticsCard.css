@@ -1,10 +1,8 @@
 .statistics__cards {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     gap: 20px;
-    padding: 20px;
-    background-color: #F6F8FA;
+    background-color: #EFEFEF;
     border-radius: 8px;
 }
 

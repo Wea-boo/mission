@@ -9,38 +9,29 @@
 
 body {
   overflow-x: hidden;
-}
-
-.Visualization {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background-color: #f5f5f5;
-
 }
 
+/*.Visualization {
+  
+}*/
 .page-title {
   margin: 20px 0;
   font-size: 36px;
   color: #2c3e50;
 }
 
-.details-container {
-  width: 100%;
-  max-width: 1200px;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  margin-bottom: 40px;
+/*.details-container {
+  overflow: hidden;
+  flex-wrap: wrap;
+}*/
 
-}
-
-h2 {
+.Title {
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 5px;
   color: #2c3e50;
+  margin-left: 25px;
 }
 
 .info-section {
@@ -55,17 +46,31 @@ h2 {
 .user-info {
   margin-bottom: 0;
 }
+
 .user-info .info-label:not(#user-title) {
   padding-left: 35px;
 }
 
-.info-label {
+.info-label-1 {
   font-weight: bold;
   margin-right: 5px;
+  color: #1f3c58;
 }
 
-.dates-info {
-  width: 100%;
+.info-label-2 {
+  font-weight: bold;
+  margin-right: 5px;
+  color: #1f3c58;
+}
+
+.demande-dates .last-modified {
+  margin-top: 15px;
+}
+
+
+
+.mission-info p {
+  margin-bottom: 10px;
 }
 
 .actions-container {
@@ -94,16 +99,21 @@ h2 {
 }
 
 .back-button {
-  display: inline-block;
+  display: block;
   background-color: #95a5a6;
   color: #fff;
-  padding: 10px 20px;
-  margin: 10px;
+  padding: 8px 10px;
+  margin: 0 auto;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.3s;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  max-width: 200px;
+  margin-left: 23px;
+
 }
 
 .back-button:hover {
@@ -112,4 +122,69 @@ h2 {
 
 .info-section p {
   line-height: 35px;
+}
+
+
+
+.mission-info {
+  background-color: #ffffff;
+  margin: 15px;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 110%;
+  width: calc(100% - 240px);
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-left: 25px;
+}
+
+.demande-info {
+  background-color: #ffffff;
+  margin: 12px;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 105%;
+  float: right;
+  width: 450px;
+  margin-right: -95px;
+}
+
+.demande-dates {
+  background-color: #ffffff;
+  margin: 15px;
+  border-radius: 5px;
+  margin-right: -96px;
+  padding: 23px;
+  font-size: 105%;
+  float: right;
+  width: 450px;
+  margin-top: -118px;
+}
+
+.event-table-container {
+  background-color: #ffffff;
+  margin: 15px;
+  border-radius: 5px;
+  padding: 20px;
+  width: 106%;
+  margin-left: 25px;
+
+}
+
+.mission-info,
+.demande-info,
+.demande-dates,
+.event-table-container {
+  box-shadow: 0 0.125rem 9.375rem rgba(90, 97, 105, 0.1),
+    0 0.25rem 0.5rem rgba(90, 97, 105, 0.12),
+    0 0.9375rem 1.375rem rgba(226, 240, 255, 0.1),
+    0 0.4375rem 2.1875rem rgba(165, 182, 201, 0.1);
+}
+
+
+.mission-info .demande-info,
+.mission-info .demande-dates {
+  margin-bottom: 10px;
 }

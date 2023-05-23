@@ -4,7 +4,6 @@ import StatisticsCards from '../Components/StatisticsCards';
 import TopEmployeeDemands from '../Components/TopEmployeeDemands';
 import MissionTypePieChart from '../Components/MissionTypePieChart';
 
-
 const Stats = () => {
     return (
         <div className="statistics">
@@ -12,10 +11,10 @@ const Stats = () => {
                 <StatisticsCards />
             </div>
             <div className="statistics__row statistics__charts">
-                <div className="chart__container">
+                <div className="statistics__chart-card">
                     <TopEmployeeDemands />
                 </div>
-                <div className="chart__container">
+                <div className="statistics__chart-card">
                     <MissionTypePieChart />
                 </div>
             </div>

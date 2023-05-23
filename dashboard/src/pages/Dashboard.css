@@ -28,6 +28,7 @@
   transition: background 0.5s, transform 0.5s;
   font-size: 32px;
   margin: 20px;
+  cursor: pointer;
 }
 
 .filter-card:hover {

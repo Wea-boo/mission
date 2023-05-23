@@ -29,6 +29,7 @@
 .custom-table th,
 .custom-table td {
   padding: 12px 15px;
+  min-height: 50px; /* Adjust this value as needed */
 }
 
 .custom-table tbody tr {

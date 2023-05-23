@@ -35,7 +35,7 @@ const Demandes = () => {
             );
   
             setDemands(response.data.results);
-            setPagesCount(Math.ceil(response.data.count / 4)); // assuming 10 is the number of items per page
+            setPagesCount(Math.ceil(response.data.count / 8)); // assuming 10 is the number of items per page
           } else {
             console.log("no filter found");
           }
@@ -95,6 +95,17 @@ const Demandes = () => {
                 </td>
               </tr>
             ))}
+            {[...Array(8 - (demands ? demands.length : 0))].map((_, index) => (
+          <tr key={'empty' + index}>
+            <td className="table-cell">-</td>
+            <td className="table-cell">-</td>
+            <td className="table-cell">-</td>
+            <td className="table-cell">-</td>
+            <td className="table-cell">-</td>
+            <td className="table-cell">-</td>
+            <td className="table-cell"></td>
+          </tr>
+        ))}
           </tbody>
         </table>
         <div className="pagination">

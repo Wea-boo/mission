@@ -701,7 +701,7 @@ class UserProfile(APIView):
         }, status=status.HTTP_200_OK)
 
 class CustomPagination(PageNumberPagination):
-    page_size = 4
+    page_size = 8
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
